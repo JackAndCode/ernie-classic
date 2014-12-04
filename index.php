@@ -10,11 +10,11 @@ if($method === 'POST')
 
 function do_post() {
     var_dump($_POST);
-    echo 'Dammit Kelo';
+    echo '';
 }
 
 
 function do_get() {
     var_dump($_GET);
-    echo 'Dammit David';
+    echo '';
 }

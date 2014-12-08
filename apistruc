@@ -1,0 +1,27 @@
+/index.php?method=all&data=...
+
+GET  /all 
+	Gets all of the post done in the guestbook.
+	Returns it as an ordered collection of message objects as JSON
+	[{
+		"name" : "Foo", 
+		"date" : "0000-00-00 00:00:00",
+		"message" : "Hello World, this is Houston.",
+		"lang" : "en"
+	}...]
+GET  /lastest
+	Gets the lastest post
+	Returns it as an ordered collection of message objects as JSON
+	[{
+		"name" : "Foo", 
+		"date" : "0000-00-00 00:00:00",
+		"message" : "Hello World, this is Houston.",
+		"lang" : "en"
+	}...]
+
+POST /write  
+	Takes in a JSON literal of the message
+	{name, message, en} and also a client signifier. This is to know where
+	the message came from. 
+
+

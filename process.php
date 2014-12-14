@@ -1,22 +1,35 @@
 <?php
 $method     = $_SERVER['REQUEST_METHOD'];
-header('Content-Type: application/json');
+//header('Content-Type: application/json');
+define('DATA_FILE', "messages.txt");
+
+function deserialize($latest = false) {
+    $buffy = trim(file_get_contents(DATA_FILE));
+    $buffy = explode("\n", $buffy);
+    for ($i=0; $i < count($buffy); $i++) { 
+        $messageLine = array();
+        $content = explode("\t", $buffy[$i] );
+
+        $messageLine['date'] = (int) $content[0];
+        $messageLine['language'] = $content[1];
+        $messageLine['name'] = $content[2];
+        $messageLine['message'] = $content[3];
+
+        $buffy[$i] = $messageLine;
+    }
+    if($latest) {
+        echo json_encode(array($buffy[count($buffy) - 1]));
+    } else {
+        echo json_encode($buffy);
+    }
+}
 
 function get_all() {
-   // var_dump($_GET);
-    $alldata = array("Name" => $_POST['name'],
-                        "Date" => getdate(),
-                        "Message" => $_POST['message'],
-                        "Language" => $_POST['language']);
-    echo json_encode($alldata);
+   deserialize();
 }
 
 function get_latest() {
-    $latestpost = array("Name" => $_POST['name'],
-        "Date" => getdate(),
-        "Message" => $_POST['message'],
-        "Language" => $_POST['language']);
-    echo json_encode($latestpost);
+    deserialize(true);
 }
 
 function write_me() {
@@ -41,7 +54,7 @@ function write_me() {
                                                 $messageLine['message']);
 
 
-        $f  = file_put_contents("messages.txt", $dataLine, FILE_APPEND );
+        $f  = file_put_contents(DATA_FILE, $dataLine, FILE_APPEND );
         echo json_encode($messageLine);
     }
 }

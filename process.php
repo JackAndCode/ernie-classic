@@ -1,4 +1,7 @@
 <?php
+// While we're emulating technology from the early 2000's :P
+
+
 $method     = $_SERVER['REQUEST_METHOD'];
 //header('Content-Type: application/json');
 define('DATA_FILE', "messages.txt");

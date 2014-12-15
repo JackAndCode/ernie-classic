@@ -10,6 +10,7 @@ function deserialize($latest = false, $filter = array(
         'date' => null,  
         'language' => null,  
         'name' => null,  
+        'to' => null,  
         'message' => null,  
     )) {
     $buffy = trim(file_get_contents(DATA_FILE));
@@ -22,14 +23,16 @@ function deserialize($latest = false, $filter = array(
         $messageLine['date'] = (int) $content[0];
         $messageLine['language'] = $content[1];
         $messageLine['name'] = $content[2];
-        $messageLine['message'] = $content[3];
+        $messageLine['to'] = $content[3];
+        $messageLine['message'] = $content[4];
 
         if
         (
             ($filter['language'] == null || $filter['language'] === $messageLine['language']) &&
             ($filter['message'] == null || $filter['message'] === $messageLine['message']) &&
             ($filter['name'] == null || $filter['name'] === $messageLine['name']) &&
-            ($filter['date'] == null || $filter['date'] === $messageLine['date']) 
+            ($filter['date'] == null || $filter['date'] === $messageLine['date']) &&
+            ($filter['to'] == null || $filter['to'] === $messageLine['to']) 
         ) {
             array_push($out, $messageLine);
         }
@@ -56,6 +59,7 @@ function write_me() {
     $valid &= isset($_POST['message']);
     $valid &= isset($_POST['language']);
     $valid &= isset($_POST['name']);
+    $valid &= isset($_POST['to']);
     
     $messageLine = array();
     
@@ -66,10 +70,12 @@ function write_me() {
         $messageLine['message']   = $_POST['message'];
         $messageLine['language']  = $_POST['language'];
         $messageLine['name']      = $_POST['name'];
+        $messageLine['to']      = $_POST['to'];
         $messageLine['date']      = getdate();
-        $dataLine = sprintf("%s\t%s\t%s\t%s\n", $messageLine['date'][0],       
+        $dataLine = sprintf("%s\t%s\t%s\t%s\t%s\n", $messageLine['date'][0],       
                                                 $messageLine['language'],
                                                 $messageLine['name'],
+                                                $messageLine['to'],
                                                 $messageLine['message']);
 
 

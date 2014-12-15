@@ -6,12 +6,12 @@ $method     = $_SERVER['REQUEST_METHOD'];
 //header('Content-Type: application/json');
 define('DATA_FILE', "messages.txt");
 
-function deserialize($latest = false, $filter = array(
+function deserialize($latest = false, $constraints = array(
         'date' => null,  
         'language' => null,  
         'name' => null,  
         'to' => null,  
-        'message' => null,  
+        'message' => null,
     )) {
     $buffy = trim(file_get_contents(DATA_FILE));
     $buffy = explode("\n", $buffy);
@@ -28,11 +28,11 @@ function deserialize($latest = false, $filter = array(
 
         if
         (
-            ($filter['language'] == null || $filter['language'] === $messageLine['language']) &&
-            ($filter['message'] == null || $filter['message'] === $messageLine['message']) &&
-            ($filter['name'] == null || $filter['name'] === $messageLine['name']) &&
-            ($filter['date'] == null || $filter['date'] === $messageLine['date']) &&
-            ($filter['to'] == null || $filter['to'] === $messageLine['to']) 
+            ($constraints['language'] == null || $constraints['language'] === $messageLine['language']) &&
+            ($constraints['message'] == null || $constraints['message'] === $messageLine['message']) &&
+            ($constraints['name'] == null || $constraints['name'] === $messageLine['name']) &&
+            ($constraints['date'] == null || $constraints['date'] === $messageLine['date']) &&
+            ($constraints['to'] == null || $constraints['to'] === $messageLine['to']) 
         ) {
             array_push($out, $messageLine);
         }
@@ -46,12 +46,24 @@ function deserialize($latest = false, $filter = array(
     }
 }
 
-function get_all() {
-   deserialize(false);
+function get_all($constraints = array(
+        'date' => null,  
+        'language' => null,  
+        'name' => null,  
+        'to' => null,  
+        'message' => null,
+    )) {
+   deserialize(false, $constraints);
 }
 
-function get_latest() {
-    deserialize(true);
+function get_latest($constraints = array(
+        'date' => null,  
+        'language' => null,  
+        'name' => null,  
+        'to' => null,  
+        'message' => null,
+    )) {
+    deserialize(true, $constraints);
 }
 
 function write_me() {

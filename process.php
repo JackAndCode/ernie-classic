@@ -6,9 +6,15 @@ $method     = $_SERVER['REQUEST_METHOD'];
 //header('Content-Type: application/json');
 define('DATA_FILE', "messages.txt");
 
-function deserialize($latest = false) {
+function deserialize($latest = false, $filter = array(
+        'date' => null,  
+        'language' => null,  
+        'name' => null,  
+        'message' => null,  
+    )) {
     $buffy = trim(file_get_contents(DATA_FILE));
     $buffy = explode("\n", $buffy);
+    $out = array();
     for ($i=0; $i < count($buffy); $i++) { 
         $messageLine = array();
         $content = explode("\t", $buffy[$i] );
@@ -18,17 +24,27 @@ function deserialize($latest = false) {
         $messageLine['name'] = $content[2];
         $messageLine['message'] = $content[3];
 
-        $buffy[$i] = $messageLine;
+        if
+        (
+            ($filter['language'] == null || $filter['language'] === $messageLine['language']) &&
+            ($filter['message'] == null || $filter['message'] === $messageLine['message']) &&
+            ($filter['name'] == null || $filter['name'] === $messageLine['name']) &&
+            ($filter['date'] == null || $filter['date'] === $messageLine['date']) 
+        ) {
+            array_push($out, $messageLine);
+        }
     }
+
+
     if($latest) {
-        echo json_encode(array($buffy[count($buffy) - 1]));
+        echo json_encode(array($out[count($out) - 1]));
     } else {
-        echo json_encode($buffy);
+        echo json_encode($out);
     }
 }
 
 function get_all() {
-   deserialize();
+   deserialize(false);
 }
 
 function get_latest() {

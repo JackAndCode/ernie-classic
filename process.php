@@ -1,6 +1,7 @@
 <?php
 // While we're emulating technology from the early 2000's :P
 
+
 $method     = $_SERVER['REQUEST_METHOD'];
 header('Content-Type: application/json');
 define('DATA_FILE', "messages.txt");
@@ -27,10 +28,11 @@ function deserialize($latest = false, $constraints = array(
 
         if
         (
-            ($constraints['to'] == null) || 
-            ($constraints['name'] == null) || 
-            ($constraints['name'] === $messageLine['name'] && $constraints['to'] === $messageLine['to']) ||
-            ($constraints['name'] === $messageLine['to'] && $constraints['to'] === $messageLine['name']) 
+            ($constraints['language'] == null || $constraints['language'] === $messageLine['language']) &&
+            ($constraints['message'] == null || $constraints['message'] === $messageLine['message']) &&
+            ($constraints['name'] == null || $constraints['name'] === $messageLine['name']) &&
+            ($constraints['date'] == null || $constraints['date'] === $messageLine['date']) &&
+            ($constraints['to'] == null || $constraints['to'] === $messageLine['to']) 
         ) {
             array_push($out, $messageLine);
         }
@@ -88,6 +90,7 @@ function write_me() {
                                                 $messageLine['to'],
                                                 $messageLine['message']);
 
+
         $f  = file_put_contents(DATA_FILE, $dataLine, FILE_APPEND );
         echo json_encode($messageLine);
     }
@@ -100,7 +103,6 @@ if($method === 'POST') {
 	        write_me();    
             break;
         default:
-            echo json_encode($_POST);
             break;
     }
 } else if($method === 'GET') {
@@ -118,8 +120,8 @@ if($method === 'POST') {
             break;
         default:
         case 'all':
-            $filter['to'] = isset($_GET['to']) ? $_GET['to'] : null;
-            $filter['name'] = isset($_GET['name']) ? $_GET['name'] : null;
+            $filter['to'] = isset($_GET['owner']) ? $_GET['owner'] : null;
+            $filter['name'] = isset($_GET['owner']) ? $_GET['owner'] : null;
             get_all($filter);
             break;
     }
